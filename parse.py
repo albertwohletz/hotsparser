@@ -23,6 +23,8 @@ ids = {
         'Mattie': '161823'
 }
 
+f=open("out.txt", "a+")
+f.write(time+',')
 for name, id in ids.iteritems():
   url = 'https://www.hotslogs.com/Player/Profile?PlayerID='+id
   r = requests.get(url)
@@ -30,5 +32,5 @@ for name, id in ids.iteritems():
   qm = soup.find('td', text='Quick Match')
   box = qm.findNext('td').find('span').text
   mmr = box[-5:-1]
-  print "%s: %s   %s" % (name, mmr, time)
+  f.write(mmr+',')
 
