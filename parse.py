@@ -2,14 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 import datetime
 
-"""
-    Example HTML:
-    <tr class="rgRow" id="ctl00_MainContent_RadGridGeneralInformation_ctl00__2">
-        <td>Quick Match</td><td><img class="divLeagueImage" src="//d1i1jxrdh2kvwy.cloudfront.net/Images/Leagues/1.png"/>\xa0<span>Diamond 44219 (MMR:\xa02207)</span></td>
-    </tr>
-"""
-
-time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 ids = {
         'Blindo': '181757',
         'Tefefe': '10683361',
@@ -24,13 +16,15 @@ ids = {
 }
 
 f=open("out.txt", "a+")
-f.write(time+',')
+f.write(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+
 for name, id in ids.iteritems():
   url = 'https://www.hotslogs.com/Player/Profile?PlayerID='+id
   r = requests.get(url)
   soup = BeautifulSoup(r.content, 'lxml')
   qm = soup.find('td', text='Quick Match')
   box = qm.findNext('td').find('span').text
-  mmr = box[-5:-1]
-  f.write(mmr+',')
+  mmr = box[-5:-1] # Grab 4 digit mmr, breaks if scrub <1k
+  f.write(",%s" % mmr)
 
+f.close()
