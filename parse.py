@@ -1,4 +1,5 @@
 import requests
+import re
 from bs4 import BeautifulSoup
 import datetime
 
@@ -16,6 +17,7 @@ ids = {
 }
 
 f=open("out.txt", "a+")
+f.write('\n')
 f.write(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
 
 for name, id in ids.iteritems():
@@ -24,7 +26,7 @@ for name, id in ids.iteritems():
   soup = BeautifulSoup(r.content, 'lxml')
   qm = soup.find('td', text='Quick Match')
   box = qm.findNext('td').find('span').text
-  mmr = box[-5:-1] # Grab 4 digit mmr, breaks if scrub <1k
+  mmr = re.findall(r'MMR:.\d+', box)[0].split()[1]
   f.write(",%s" % mmr)
 
 f.close()
