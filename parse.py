@@ -1,32 +1,37 @@
-import requests
-import re
-from bs4 import BeautifulSoup
 import datetime
+import urllib
+import json
 
-ids = {
-        'Blindo': '181757',
-        'Tefefe': '10683361',
-        'Vizoul': '161824',
-        'Darklink': '8780497',
-        'QKachoo': '1066174',
-        'Etiquette': '171306',
-        'Furasta': '1492384',
-        'NastyNate': '292699',
-        'KingBaby': '6782253',
-        'Mattie': '161823'
+players = {
+        'Blindo': {'id': '181757'},
+        'Tefefe': {'id': '10683361'},
+        'Vizoul': {'id': '161824'},
+        'Darklink': {'id': '8780497'},
+        'QKachoo': {'id': '1066174'},
+        'Etiquette': {'id': '171306'},
+        'Furasta': {'id': '1492384'},
+        'NastyNate': {'id': '292699'},
+        'KingBaby': {'id': '6782253'},
+        'Mattie': {'id': '161823'}
 }
 
-f=open("out.txt", "a+")
+
+for name, player in players.iteritems():
+  url = 'https://api.hotslogs.com/Public/Players/'+player['id']
+  foo = json.loads(urllib.urlopen(url).read())
+  for ranking in foo['LeaderboardRankings']:
+      player[ranking['GameMode']] = ranking['CurrentMMR']
+
+f=open("qm_out.txt", "a+")
 f.write('\n')
 f.write(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+for name, player in players.iteritems():
+  f.write(",%s" % player.get('QuickMatch',0))
+f.close()
 
-for name, id in ids.iteritems():
-  url = 'https://www.hotslogs.com/Player/Profile?PlayerID='+id
-  r = requests.get(url)
-  soup = BeautifulSoup(r.content, 'lxml')
-  qm = soup.find('td', text='Quick Match')
-  box = qm.findNext('td').find('span').text
-  mmr = re.findall(r'MMR:.\d+', box)[0].split()[1]
-  f.write(",%s" % mmr)
-
+f=open("unranked_out.txt", "a+")
+f.write('\n')
+f.write(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+for name, player in players.iteritems():
+  f.write(",%s" % player.get('UnrankedDraft', 0))
 f.close()
