@@ -12,7 +12,8 @@ players = {
         'Furasta': {'id': '1492384'},
         'NastyNate': {'id': '292699'},
         'KingBaby': {'id': '6782253'},
-        'Mattie': {'id': '161823'}
+        'Mattie': {'id': '161823'},
+        'Tilamor': {'id': '1262342'},
 }
 
 
@@ -23,15 +24,14 @@ for name, player in players.iteritems():
       player[ranking['GameMode']] = ranking['CurrentMMR']
 
 f=open("qm_out.txt", "a+")
-f.write('\n')
 f.write(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
-for name, player in players.iteritems():
+for name, player in sorted(players.iteritems()):
+  print name,player.get('QuickMatch',0)
   f.write(",%s" % player.get('QuickMatch',0))
 f.close()
 
 f=open("unranked_out.txt", "a+")
-f.write('\n')
 f.write(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
-for name, player in players.iteritems():
+for name, player in sorted(players.iteritems()):
   f.write(",%s" % player.get('UnrankedDraft', 0))
 f.close()
