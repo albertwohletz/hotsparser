@@ -14,6 +14,7 @@ def getMMR(request, search_string):
 
 def updateFile(key, players):
     f=open(key+'.txt', 'a+')
+    f.write('\n')
     f.write(datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
     for name, player in sorted(players.iteritems()):
       f.write(',%s' % player.get(key,0))
