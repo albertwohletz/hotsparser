@@ -10,7 +10,7 @@ def getMMR(request, search_string):
       box = td.findNext('td').find('span').text
       return re.findall(r'MMR:.\d+', box)[0].split()[1]
   else:
-      return None
+      return ''
 
 def updateFile(key, players):
     f=open(key+'.txt', 'a+')
@@ -40,16 +40,17 @@ def main():
       request = requests.get(url)
 
       # Get QM
-      player['quickmatch'] = getMMR(request, 'Quick Match')
+      # player['quickmatch'] = getMMR(request, 'Quick Match')
       player['unranked'] = getMMR(request, 'Unranked Draft')
-      player['heroleague'] = getMMR(request, 'Hero League')
-      player['teamleague'] = getMMR(request, 'Team League')
+      # player['heroleague'] = getMMR(request, 'Hero League')
+      # player['teamleague'] = getMMR(request, 'Team League')
 
     # Write Files
-    updateFile('quickmatch', players)
+    # updateFile('quickmatch', players)
     updateFile('unranked', players)
-    updateFile('heroleague', players)
-    updateFile('teamleague', players)
+    # updateFile('heroleague', players)
+    # updateFile('teamleague', players)
+    print players
 
 if __name__ == '__main__':
     main()
